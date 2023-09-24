@@ -1,44 +1,28 @@
 export default function SubHead({
   gameState,
   onPlayButton,
-  finds,
-  misses,
   difficulty,
+  buttonText,
+  gamePlayMessage,
+  found,
+  missed,
+  onGameOver,
 }) {
-  let gamePlayMessage = "";
-  let buttonText = "";
-  switch (gameState) {
-    case "idle":
-      buttonText = "Play";
-      break;
-    case "memorize":
-      gamePlayMessage = "Memorize the highlighted cells";
-      break;
-    case "playing":
-      gamePlayMessage = "Click the cells that were highlighted!";
-      break;
-    case "game-over":
-      gamePlayMessage = `You got all of the boxes with ${misses} mistakes!`;
-      buttonText = "Play again?";
-      break;
-    default:
-      console.error("Gamestate was not found");
-      break;
-  }
-
   return (
     <>
       {gameState === "idle" ? (
         <button onClick={() => onPlayButton()}>{buttonText}</button>
       ) : null}
-      {gamePlayMessage ? <p>{gamePlayMessage}</p> : null}
+      {gamePlayMessage ? <p>{gamePlayMessage}</p> : <p></p>}
       {gameState === "playing" ? (
         <p>
-          {finds} right out of {difficulty} total with {misses} mistakes.
+          {found} right out of {difficulty} total with {missed} mistakes.
         </p>
-      ) : null}
+      ) : (
+        <p></p>
+      )}
       {gameState === "game-over" ? (
-        <button onClick={() => onPlayButton()}>{buttonText}</button>
+        <button onClick={() => onGameOver()}>{buttonText}</button>
       ) : null}
     </>
   );

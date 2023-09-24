@@ -9,6 +9,7 @@
   display: grid;
   gap: 5px;
   width: auto;
+  height: auto;
   min-width: 350px;
   min-height: 350px;
 }
