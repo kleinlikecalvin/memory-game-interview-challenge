@@ -6,23 +6,3 @@ export function setRandomHighlightedCells(arr, difficulty) {
     setRandomHighlightedCells(arr, difficulty);
   }
 }
-
-export function handleCellClick(
-  cells,
-  index,
-  found,
-  setFound,
-  missed,
-  setMissed,
-  setCells
-) {
-  let updatedCells = [...cells];
-  if (cells[index] === "highlighted") {
-    updatedCells[index] = "found";
-    setFound(found);
-  } else {
-    updatedCells[index] = "miss";
-    setMissed(missed);
-  }
-  setCells(updatedCells);
-}

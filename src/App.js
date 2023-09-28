@@ -1,17 +1,10 @@
 import "./App.css";
-import { React, useEffect } from "react";
+import React from "react";
 import { useAppState } from "./reducer";
-import { handleCellClick } from "./util";
 import SubHead from "./SubHead";
 
 export default function App() {
   const [state, dispatch] = useAppState();
-
-  useEffect(() => {
-    if (state.found === state.difficulty) {
-      dispatch.gameOver();
-    }
-  }, [state.found, state.difficulty, dispatch]);
 
   return (
     <div className="App">
@@ -29,7 +22,7 @@ export default function App() {
       <SubHead
         gameState={state.gameState}
         onPlayButton={() => {
-          dispatch.memorize(state.difficulty);
+          dispatch.revealBoard(state.difficulty);
           setTimeout(() => dispatch.playing(), 1000);
         }}
         difficulty={state.difficulty}
@@ -53,17 +46,7 @@ export default function App() {
             <button
               key={index}
               className={cell != null ? `cell ${cell}` : "cell"}
-              onClick={() =>
-                handleCellClick(
-                  state.cells,
-                  index,
-                  state.found,
-                  dispatch.setFound,
-                  state.missed,
-                  dispatch.setMissed,
-                  dispatch.setCells
-                )
-              }
+              onClick={() => dispatch.cellClick(index)}
               disabled={
                 state.gameState !== "playing" ||
                 cell === "found" ||

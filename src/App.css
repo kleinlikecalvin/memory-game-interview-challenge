@@ -30,7 +30,7 @@
 .cell.found:disabled {
   background-color: rgb(100, 194, 100);
 }
-.board.playing .cell.miss,
-.cell.miss:disabled {
+.board.playing .cell.missed,
+.cell.missed:disabled {
   background: rgb(198, 91, 91);
 }

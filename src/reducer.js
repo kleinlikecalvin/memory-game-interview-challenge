@@ -2,7 +2,7 @@ import React from "react";
 import { setRandomHighlightedCells } from "./util";
 
 /**
- * gameState: idle || memorize || playing || game-over
+ * gameState: idle || revealing || playing || game-over
  */
 export const initialState = {
   buttonText: "Play",
@@ -25,13 +25,10 @@ export function reducer(state, action) {
         cells,
       };
     }
-    case "idle": {
-      return state;
-    }
-    case "memorize": {
+    case "reveal-board": {
       const gamePlayMessage = "Memorize the highlighted cells";
       const cells = [...state.cells];
-      const gameState = "memorize";
+      const gameState = "revealing";
       for (let i = 0; i < action.payload; i++) {
         setRandomHighlightedCells(cells, action.payload);
       }
@@ -42,21 +39,7 @@ export function reducer(state, action) {
         gameState,
       };
     }
-    case "set-found": {
-      const found = action.payload;
-      return {
-        ...state,
-        found,
-      };
-    }
-    case "set-missed": {
-      const missed = action.payload;
-      return {
-        ...state,
-        missed,
-      };
-    }
-    case "playing": {
+    case "start-playing": {
       const gamePlayMessage = "Click the cells that were highlighted!";
       const gameState = "playing";
       return {
@@ -65,22 +48,32 @@ export function reducer(state, action) {
         gameState,
       };
     }
-    case "set-cells": {
-      const cells = action.payload;
-      return {
-        ...state,
-        cells,
-      };
-    }
-    case "game-over": {
-      const buttonText = "Play again?";
-      const gamePlayMessage = `You got all of the boxes with ${state.missed} mistakes!`;
-      const gameState = "game-over";
+    case "click-cell": {
+      const updatedCells = [...state.cells];
+      let { buttonText, gamePlayMessage, gameState, found, missed } = state;
+
+      if (state.cells[action.payload] === "highlighted") {
+        updatedCells[action.payload] = "found";
+        found++;
+      } else {
+        updatedCells[action.payload] = "missed";
+        missed++;
+      }
+
+      if (found === state.difficulty) {
+        buttonText = "Play again?";
+        gamePlayMessage = `You got all of the boxes with ${missed} mistakes!`;
+        gameState = "game-over";
+      }
+
       return {
         ...state,
         buttonText,
         gamePlayMessage,
+        cells: updatedCells,
         gameState,
+        found,
+        missed,
       };
     }
     case "reset": {
@@ -105,14 +98,10 @@ export function useAppState() {
       setDifficulty: (difficulty) =>
         dispatch({ type: "set-difficulty", payload: difficulty }),
       idle: () => dispatch({ type: "idle" }),
-      memorize: (difficulty) =>
-        dispatch({ type: "memorize", payload: difficulty }),
-      playing: () => dispatch({ type: "playing" }),
-      setCells: (cells) => dispatch({ type: "set-cells", payload: cells }),
-      setFound: (found) => dispatch({ type: "set-found", payload: found + 1 }),
-      setMissed: (missed) =>
-        dispatch({ type: "set-missed", payload: missed + 1 }),
-      gameOver: () => dispatch({ type: "game-over" }),
+      revealBoard: (difficulty) =>
+        dispatch({ type: "reveal-board", payload: difficulty }),
+      playing: () => dispatch({ type: "start-playing" }),
+      cellClick: (index) => dispatch({ type: "click-cell", payload: index }),
       reset: () => dispatch({ type: "reset" }),
     }),
     [dispatch]
