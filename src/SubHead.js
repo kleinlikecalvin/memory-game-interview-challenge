@@ -16,7 +16,7 @@ export default function SubHead({
       {gamePlayMessage ? <p>{gamePlayMessage}</p> : <p></p>}
       {gameState === "playing" ? (
         <p>
-          {found} right out of {difficulty} total with {missed} mistakes.
+          {found} right out of {difficulty} total with {missed} {missed === 1 ? 'mistake' : 'mistakes'}.
         </p>
       ) : (
         <p></p>
